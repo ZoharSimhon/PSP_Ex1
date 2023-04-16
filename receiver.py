@@ -5,7 +5,7 @@ import hashlib
 # initialize global variables:
 PRXY2_IP = '127.0.0.1'
 PROXY2_PORT = 58000
-FILE_NAME = "recieved_file_receiver.jpeg"
+FILE_NAME = "recieved_file_final.jpeg"
 
 def ask_file_tcp():
     serverAddress = (PRXY2_IP, PROXY2_PORT)
@@ -15,8 +15,7 @@ def ask_file_tcp():
         clientSocket.connect(serverAddress)
         
         #open a file in write bytes mode to recieve the data
-        fileName = "recieved_file_tcp.jpeg"
-        file = open(fileName,"wb")
+        file = open(FILE_NAME,"wb")
         
         #get the data in chuncks
         run = True
