@@ -35,8 +35,7 @@ def ask_file_tcp():
         clientSocket.connect(serverAddress)
         
         #open a file in write bytes mode to recieve the data
-        fileName = "recieved_file_tcp.jpeg"
-        file = open(fileName,"wb")
+        file = open(FILE_NAME,"wb")
         
         #get the data in chuncks
         run = True
