@@ -256,9 +256,9 @@ def handle_with_recieved_packet(serverSocket):
     return recievedPacket, addr
 
 
+#main:
 
-
-#first, get the file from the sender
+#first, get the file from the sender according tcp
 ask_file_tcp()
 
 # second, hash of the file accordig md5 algorithm

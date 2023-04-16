@@ -41,6 +41,8 @@ def send_file_tcp():
             file.close()
     return "<b><u> The redirect server has done to send the whole file, according to TCP </u></b>"
 
+#main:
+
 # first, hash of the file accordig md5 algorithm
 hash_md5()
 
