@@ -31,7 +31,7 @@ def ask_file_tcp():
         #close the file
         file.close()
         
-        print("Done Receiving the file from the tcp redirect server")
+        print("Done Receiving the file from proxy2 server")
 
 def hash_md5():
     # open the file in write bytes mode

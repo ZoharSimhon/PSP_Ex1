@@ -27,7 +27,7 @@ def send_file_tcp():
         clientSocket.bind((SERVER_IP, SERVER_PORT))
         #After the bind operation the receiver goes into standby mode (TCP) by call the method listen().
         clientSocket.listen()
-        print("The redirect tcp server is listening...")
+        print("The sender server is listening...")
         #Ejecting a connection request from the request queue is performed by call the method accept() (TCP).
         #When a sender connects the method returns a new socket object representing the connection.
         #Information is inserted about the client that is connecting.
@@ -39,7 +39,6 @@ def send_file_tcp():
             connection.sendall(file.read())
             #close the file
             file.close()
-    return "<b><u> The redirect server has done to send the whole file, according to TCP </u></b>"
 
 #main:
 

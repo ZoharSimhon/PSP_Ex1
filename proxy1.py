@@ -51,7 +51,7 @@ def ask_file_tcp():
         #close the file
         file.close()
         
-        print("Done Receiving the file from the tcp redirect server")
+        print("Done Receiving the file from the sender server")
 
 def hash_md5():
     # open the file in write bytes mode
@@ -77,7 +77,7 @@ def send_file_rudp():
         serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, yes)
         #Link an address and port with a socket is carried out by the method bind().
         serverSocket.bind((SERVER_IP, SERVER_PORT))
-        print("The redirect rudp server is listening...")
+        print("The proxy1 server is listening...")
         
         #an infinty loop - inorder to handle the incoming requests
         while True:
