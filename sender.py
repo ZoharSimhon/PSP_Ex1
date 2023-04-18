@@ -59,6 +59,7 @@ def send_file_tcp():
             connection.sendall(file.read())
             # close the file
             file.close()
+            sleep(10)
 
 # main:
 

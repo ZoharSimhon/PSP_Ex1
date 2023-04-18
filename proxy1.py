@@ -6,6 +6,7 @@ import pickle
 #In order to handle with timeout
 from threading import Timer
 #In order to make a progress bar
+from tqdm import tqdm
 from alive_progress import alive_bar
 from time import sleep
 
@@ -40,7 +41,7 @@ def ask_file_tcp():
         # recieve the file size
         data = clientSocket.recv(1024)
         sizeFile = int(data.decode())
-        numberOfChuncks = (sizeFile/1024) + 4
+        numberOfChuncks = int(sizeFile/1024) + 4
         sleep(1)
         
         #open a file in write bytes mode to recieve the data
@@ -48,14 +49,11 @@ def ask_file_tcp():
         
         #get the data in chuncks
         run = True
-        # with alive_bar(603, bar = 'circular', spinner = 'waves2') as bar:
-        with alive_bar(numberOfChuncks) as bar:
-            #while" we still get data - keep running
-            while run:
+        while run:
+            for _ in tqdm(range(numberOfChuncks)):
                 #append the new data to the opened file
                 data = clientSocket.recv(1024)
                 sleep(0.01)
-                bar()
                 if data != b"":
                     file.write(data)
                 else:
