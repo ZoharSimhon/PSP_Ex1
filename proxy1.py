@@ -37,12 +37,19 @@ def ask_file_tcp():
         #connect to the server with the serverAddress (ip, port)
         clientSocket.connect(serverAddress)
         
+        # recieve the file size
+        data = clientSocket.recv(1024)
+        sizeFile = int(data.decode())
+        numberOfChuncks = (sizeFile/1024) + 4
+        sleep(1)
+        
         #open a file in write bytes mode to recieve the data
         file = open(FILE_NAME,"wb")
         
         #get the data in chuncks
         run = True
-        with alive_bar(605, bar = 'circular', spinner = 'waves2') as bar:
+        # with alive_bar(603, bar = 'circular', spinner = 'waves2') as bar:
+        with alive_bar(numberOfChuncks) as bar:
             #while" we still get data - keep running
             while run:
                 #append the new data to the opened file
