@@ -5,6 +5,9 @@ import hashlib
 import pickle
 #In order to handle with timeout
 from threading import Timer
+#In order to make a progress bar
+from alive_progress import alive_bar
+from time import sleep
 
 # initialize global variables:
 SERVER_IP = '127.0.0.1'
@@ -39,19 +42,21 @@ def ask_file_tcp():
         
         #get the data in chuncks
         run = True
-        #while we still get data - keep running
-        while run:
-            print("Receiving...")
-            #append the new data to the opened file
-            data = clientSocket.recv(1024)
-            if data != b"":
-                file.write(data)
-            else:
-                run = False
+        with alive_bar(605, bar = 'circular', spinner = 'waves2') as bar:
+            #while" we still get data - keep running
+            while run:
+                #append the new data to the opened file
+                data = clientSocket.recv(1024)
+                sleep(0.01)
+                bar()
+                if data != b"":
+                    file.write(data)
+                else:
+                    run = False
         #close the file
         file.close()
         
-        print("Done Receiving the file from the sender server")
+        print("Done Receiving the file from the sender server\n")
 
 def hash_md5():
     # open the file in write bytes mode
@@ -77,7 +82,7 @@ def send_file_rudp():
         serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, yes)
         #Link an address and port with a socket is carried out by the method bind().
         serverSocket.bind((SERVER_IP, SERVER_PORT))
-        print("The proxy1 server is listening...")
+        print("Proxy1 server is listening...")
         
         #an infinty loop - inorder to handle the incoming requests
         while True:
@@ -85,6 +90,9 @@ def send_file_rudp():
             recievedPacket, addr = handle_with_recieved_packet(serverSocket)
             #check if we have got a syn packet - packet from a new client 
             if recievedPacket != None and recievedPacket["Flag"] == "[SYN]":
+                
+                print("start sending the file\n")
+                
                 #send to the client the FILE_SIZE
                 flag = "[SYN,ACK]"
                 seq = 0
@@ -160,10 +168,8 @@ def send_file_rudp():
                             CC_STEP = "Congestion Avoidance"
                             #according to the Congestion Avoidance we need to decrease the window in a half
                             CURRENT_WINDOW = (int)(CURRENT_WINDOW / 2)
-                            print("three duplicate ACK for sequence number:", seqACK)
 
                         #in case we have done to send the whole file
-                        print("latestSeqAcked:" ,latestSeqAcked, "FILE_SIZE", FILE_SIZE)
                         if latestSeqAcked == FILE_SIZE:
                             run = False
 
@@ -249,9 +255,6 @@ def handle_with_recieved_packet(serverSocket):
     except OSError:
         return None, None
     recievedPacket = pickle.loads(recievedPacketInBytes)
-    #print the received packet
-    print("received packet:")
-    print(recievedPacket)
     return recievedPacket, addr
 
 

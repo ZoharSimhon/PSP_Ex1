@@ -33,6 +33,7 @@ def send_file_tcp():
         #Information is inserted about the client that is connecting.
         connection, address = clientSocket.accept()
         with connection:
+            print("start sending the file\n")
             #open the file in read bytes mode 
             file = open(FILE_NAME, 'rb')
             #send all the file to the client
