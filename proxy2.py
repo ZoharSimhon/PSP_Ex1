@@ -43,22 +43,29 @@ def ask_file_rudp():
         
         run = True
         
-        #receiving data loop
-        while run:
-            recievedPSHPacket, addr = handle_with_recieved_packet(clientSocket)
-            #check if we have got a PSH packet - one chunck of data 
-            if recievedPSHPacket != None and recievedPSHPacket["Flag"] == "[PSH]":
-                #build a new packet inorder to send an ACK nessage to the server 
-                flag= "[ACK]"
-                seq = recievedPSHPacket["Seq"]
-                data = b"I have got this chunck"
-                currentWindow = recievedPSHPacket["Win"]
-                fileDataInBytes[seq-1] = recievedPSHPacket["Data"]
-                send_packet_to_client(clientSocket, addr, flag, seq, data, currentWindow)
-            #check if we have got a FYN packet - because we have got the whole file
-            if recievedPSHPacket != None and recievedPSHPacket["Flag"] == "[FYN]":
-                run = False
-        
+        #for making the progress bar
+        with tqdm(total=fileSize, ascii =" ∙○●",desc= "downloading...") as bar:
+            #receiving data loop
+            while run:
+                recievedPSHPacket, addr = handle_with_recieved_packet(clientSocket)
+                #check if we have got a PSH packet - one chunck of data 
+                if recievedPSHPacket != None and recievedPSHPacket["Flag"] == "[PSH]":
+                    #update the progress bar
+                    # print(fileDataInBytes[recievedPSHPacket["Seq"]-1])
+                    if fileDataInBytes[recievedPSHPacket["Seq"]-1] == b'':
+                        sleep(0.01)
+                        bar.update(1)
+                    #build a new packet inorder to send an ACK nessage to the server 
+                    flag= "[ACK]"
+                    seq = recievedPSHPacket["Seq"]
+                    data = b"I have got this chunck"
+                    currentWindow = recievedPSHPacket["Win"]
+                    fileDataInBytes[seq-1] = recievedPSHPacket["Data"]
+                    send_packet_to_client(clientSocket, addr, flag, seq, data, currentWindow)
+                #check if we have got a FYN packet - because we have got the whole file
+                if recievedPSHPacket != None and recievedPSHPacket["Flag"] == "[FYN]":
+                    run = False
+            
         #send a FYN,ACK message , in order to finish the connection with the server
         #we make a for loop to solve the case that the FYN,ACK packet gets lost  
         for i in range (1,6):
@@ -111,9 +118,6 @@ def handle_with_recieved_packet(clientSocket):
     except OSError:
         return None, None
     recievedPacket = pickle.loads(recievedPacketInBytes)
-    #print the received packet
-    print("received packet:")
-    print(recievedPacket)
     return recievedPacket, addr
 
 def hash_md5():
@@ -145,7 +149,6 @@ def send_file_tcp():
             # send the file size
             print("send the size file")
             size = size_file()
-            print(size)
             connection.send(size.encode())
 
             sleep(0.5)

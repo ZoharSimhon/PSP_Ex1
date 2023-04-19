@@ -29,7 +29,8 @@ def ask_file_tcp():
         #get the data in chuncks
         run = True
         while run:
-            for _ in tqdm(range(numberOfChuncks)):
+            #for the progress bar
+            for _ in tqdm(range(numberOfChuncks), ascii =" ∙○●",desc= "downloading..." ):
                 #append the new data to the opened file
                 data = clientSocket.recv(1024)
                 sleep(0.01)
