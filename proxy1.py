@@ -7,7 +7,6 @@ import pickle
 from threading import Timer
 #In order to make a progress bar
 from tqdm import tqdm
-from alive_progress import alive_bar
 from time import sleep
 
 # initialize global variables:

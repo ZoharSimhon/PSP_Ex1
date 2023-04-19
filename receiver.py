@@ -1,6 +1,9 @@
 import socket
 #in order to hash the file using md5 algorithm
 import hashlib
+#In order to make a progress bar
+from tqdm import tqdm
+from time import sleep
 
 # initialize global variables:
 PRXY2_IP = '127.0.0.1'
@@ -14,24 +17,30 @@ def ask_file_tcp():
         #connect to the server with the serverAddress (ip, port)
         clientSocket.connect(serverAddress)
         
+        # recieve the file size
+        data = clientSocket.recv(1024)
+        sizeFile = int(data.decode())
+        numberOfChuncks = int(sizeFile/1024) + 4
+        sleep(1)
+        
         #open a file in write bytes mode to recieve the data
         file = open(FILE_NAME,"wb")
         
         #get the data in chuncks
         run = True
-        #while we still get data - keep running
         while run:
-            print("Receiving...")
-            #append the new data to the opened file
-            data = clientSocket.recv(1024)
-            if data != b"":
-                file.write(data)
-            else:
-                run = False
+            for _ in tqdm(range(numberOfChuncks)):
+                #append the new data to the opened file
+                data = clientSocket.recv(1024)
+                sleep(0.01)
+                if data != b"":
+                    file.write(data)
+                else:
+                    run = False
         #close the file
         file.close()
         
-        print("Done Receiving the file from proxy2 server")
+        print("Done Receiving the file from proxy2 server\n")
 
 def hash_md5():
     # open the file in write bytes mode
