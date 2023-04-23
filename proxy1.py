@@ -218,8 +218,6 @@ def handle_timeout_in_packet(packetsStatus, i):
         CURRENT_SENT_WITHOUT_ACK = 0
         CURRENT_WINDOW = 1
         CC_STEP = "Slow Start" 
-        #print the timeout to the terminal 
-        print("we have got timeout for seq=", i)
 
 def read_and_divide_file():
     #declare the global variables
